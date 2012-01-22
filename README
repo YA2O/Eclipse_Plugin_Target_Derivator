@@ -1,0 +1,4 @@
+This Eclipse plugin (developped on Eclipse 3.7.1) is for Maven users who want to mark the target folders as derived resources.
+The point is to filter the derived resources when searching for resources (with i.e. Ctrl+Shift+R). After a mvn clean, the target
+folders are recreated, and the plugin will help to mark these new folders as derivated.
+
