@@ -17,7 +17,7 @@
          </menu>
          <action
                label="&amp;Sample Action"
-               icon="icons/Pointy.gif"
+               icon="icons/target.gif"
                class="se.ya2o.targetderivator.actions.TargetDerivatorAction"
                tooltip="Mark target folders as derived resources"
                menubarPath="sampleMenu/sampleGroup"
