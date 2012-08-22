@@ -25,7 +25,16 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * @see IWorkbenchWindowActionDelegate
  */
 public class TargetDerivatorAction implements IWorkbenchWindowActionDelegate {
-    private static final String TARGET = "target";
+
+    private static final List<String> foldersToExclude = Arrays.asList(
+            "target",
+            "tmp",
+            "temp",
+            "bin",
+            "bin-test",
+            "test-output",
+            "precompiled");
+
     private IWorkbenchWindow window;
 
     /**
@@ -93,7 +102,7 @@ public class TargetDerivatorAction implements IWorkbenchWindowActionDelegate {
         for (IResource resource : resources) {
             if (resource instanceof IFolder) {
                 IFolder folder = (IFolder) resource;
-                if (TARGET.equals(folder.getName())) {
+                if (foldersToExclude.contains(folder.getName())) {
                     folder.setDerived(true, monitor);
                 } else {
                     markAllTargetFoldersDerived(folder.members(), monitor);
