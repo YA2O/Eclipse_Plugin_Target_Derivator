@@ -5,21 +5,21 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            label="Target Derivator Action Set"
+            label="Target-derivator Action Set"
             visible="true"
             id="se.ya2o.targetderivator.actionSet">
          <menu
-               label="Target Derivator"
+               label="Derivator"
                id="derivatorMenu">
             <separator
                   name="derivatorGroup">
             </separator>
          </menu>
          <action
-               label="Mark target folders as derived resources"
+               label="Mark target folders as derived resources (as well as tmp, temp, bin, etc...)"
                icon="icons/markderiveddir.gif"
                class="se.ya2o.targetderivator.actions.TargetDerivatorAction"
-               tooltip="Mark target folders as derived resources"
+               tooltip="Mark target folders as derived resources (as well as tmp, temp, bin, etc..."
                menubarPath="derivatorMenu/derivatorGroup"
                toolbarPath="derivatorGroup"
                id="se.ya2o.targetderivator.actions.TargetDerivatorAction">
