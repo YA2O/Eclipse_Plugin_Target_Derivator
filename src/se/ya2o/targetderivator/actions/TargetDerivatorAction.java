@@ -3,6 +3,7 @@ package se.ya2o.targetderivator.actions;
 import java.util.Arrays;
 import java.util.List;
 
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
@@ -13,7 +14,6 @@ import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-import org.eclipse.jface.dialogs.MessageDialog;
 
 /**
  * Our sample action implements workbench action delegate.
@@ -24,15 +24,14 @@ import org.eclipse.jface.dialogs.MessageDialog;
  * 
  * @see IWorkbenchWindowActionDelegate
  */
-public class TargetDerivatorAction implements IWorkbenchWindowActionDelegate
-{
+public class TargetDerivatorAction implements IWorkbenchWindowActionDelegate {
+    private static final String TARGET = "target";
     private IWorkbenchWindow window;
 
     /**
      * The constructor.
      */
-    public TargetDerivatorAction()
-    {}
+    public TargetDerivatorAction() {}
 
     /**
      * The action has been activated. The argument of the
@@ -42,8 +41,7 @@ public class TargetDerivatorAction implements IWorkbenchWindowActionDelegate
      * @see IWorkbenchWindowActionDelegate#run
      */
     @Override
-    public void run(IAction action)
-    {
+    public void run(IAction action) {
         //        MessageDialog.openInformation(
         //                window.getShell(),
         //                "Targetderivator",
@@ -52,64 +50,56 @@ public class TargetDerivatorAction implements IWorkbenchWindowActionDelegate
         IWorkspace workspace = ResourcesPlugin.getWorkspace();
         List<IProject> projects = Arrays.asList(workspace.getRoot().getProjects());
 
-        IProgressMonitor monitor = new IProgressMonitor()
-        {
+        IProgressMonitor monitor = new IProgressMonitor() {
 
             @Override
-            public void beginTask(String arg0, int arg1)
-            {}
+            public void beginTask(String arg0, int arg1) {}
 
             @Override
-            public void done()
-            {}
+            public void done() {}
 
             @Override
-            public void internalWorked(double arg0)
-            {}
+            public void internalWorked(double arg0) {}
 
             @Override
-            public boolean isCanceled()
-            {
+            public boolean isCanceled() {
                 return false;
             }
 
             @Override
-            public void setCanceled(boolean arg0)
-            {}
+            public void setCanceled(boolean arg0) {}
 
             @Override
-            public void setTaskName(String arg0)
-            {}
+            public void setTaskName(String arg0) {}
 
             @Override
-            public void subTask(String arg0)
-            {}
+            public void subTask(String arg0) {}
 
             @Override
-            public void worked(int arg0)
-            {}
+            public void worked(int arg0) {}
         };
 
-        for(IProject project : projects)
-        {
-            if(project.isOpen())
-            {
-                try
-                {
-                    List<IResource> resources = Arrays.asList(project.members());
-                    for(IResource resource : resources)
-                    {
-                        if("target".equals(resource.getName()))
-                        {
-                            resource.setDerived(true, monitor);
-                        }
-                    }
-                }
-                catch(CoreException e)
-                {}
+        for (IProject project : projects) {
+            if (project.isOpen()) {
+                try {
+                    markAllTargetFoldersDerived(project.members(), monitor);
+                } catch (CoreException e) {}
             }
         }
 
+    }
+
+    private void markAllTargetFoldersDerived(IResource[] resources, IProgressMonitor monitor) throws CoreException {
+        for (IResource resource : resources) {
+            if (resource instanceof IFolder) {
+                IFolder folder = (IFolder) resource;
+                if (TARGET.equals(folder.getName())) {
+                    folder.setDerived(true, monitor);
+                } else {
+                    markAllTargetFoldersDerived(folder.members(), monitor);
+                }
+            }
+        }
     }
 
     /**
@@ -121,8 +111,7 @@ public class TargetDerivatorAction implements IWorkbenchWindowActionDelegate
      * @see IWorkbenchWindowActionDelegate#selectionChanged
      */
     @Override
-    public void selectionChanged(IAction action, ISelection selection)
-    {}
+    public void selectionChanged(IAction action, ISelection selection) {}
 
     /**
      * We can use this method to dispose of any system
@@ -131,8 +120,7 @@ public class TargetDerivatorAction implements IWorkbenchWindowActionDelegate
      * @see IWorkbenchWindowActionDelegate#dispose
      */
     @Override
-    public void dispose()
-    {}
+    public void dispose() {}
 
     /**
      * We will cache window object in order to
@@ -141,8 +129,7 @@ public class TargetDerivatorAction implements IWorkbenchWindowActionDelegate
      * @see IWorkbenchWindowActionDelegate#init
      */
     @Override
-    public void init(IWorkbenchWindow window)
-    {
+    public void init(IWorkbenchWindow window) {
         this.window = window;
     }
 }
